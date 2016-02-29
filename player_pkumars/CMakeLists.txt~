@@ -133,7 +133,7 @@ include_directories(
 
 ## Declare a C++ executable
  add_executable(player_pkumars_node src/player_pkumars_node.cpp)
- target_link_libraries(player_pkumars_node ${catkin_LIBRARIES})
+ target_link_libraries(player_moliveira_node ${catkin_LIBRARIES})
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
