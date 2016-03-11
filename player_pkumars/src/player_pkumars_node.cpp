@@ -270,7 +270,7 @@ class MyPlayer: public Player
 			//Initialize position according to team
 			ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
 			tf::Transform t;
-			srand((unsigned)time(NULL)); // To start the player in a random location
+			srand(time(0)*1000); // To start the player in a random location
 			double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
 			double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
 			t.setOrigin( tf::Vector3(X, Y, 0.0) );
@@ -368,8 +368,6 @@ class MyPlayer: public Player
                 move(displacement, angle);
 
             }
-
-
 
 };
 
