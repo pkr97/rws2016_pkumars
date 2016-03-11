@@ -424,26 +424,11 @@ class MyPlayer: public Player
 
                 //Step 3
                 double displacement = msg.cat; //I am a cat, others may choose another animal
-				double distance_hunter = getHunterDistance(closest_hunter);
+				//double distance_hunter = getHunterDistance(closest_hunter);
 				
 				
-								
-				////Step 2
-                double angle = 0;
-                if (distance_hunter <  1)
-                {
-					angle = angle_prey + M_PI;
-                }
-                else
-				{
-                    angle = angle_prey ;
-                }
-
-                ////Step 3
-                //double displacement = msg.cat; //I am a cat, others may choose another animal
-
-                ////Step 4
-                move(displacement, angle);
+			
+                move(displacement, angle_prey);
 				
 				
             }
