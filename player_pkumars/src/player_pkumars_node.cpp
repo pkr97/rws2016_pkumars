@@ -298,7 +298,7 @@ class MyPlayer: public Player
                 double min_d =  -0.1; 
                 displacement = (displacement < min_d ? min_d : displacement);
 
-                double max_t =  (M_PI/30);
+                double max_t =  (M_PI/20);
                 if (turn_angle > max_t)
                     turn_angle = max_t;
                 else if (turn_angle < -max_t)
