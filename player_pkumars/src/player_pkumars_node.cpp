@@ -409,31 +409,31 @@ class MyPlayer: public Player
                 //3. Compute maximum displacement
                 //4. Move maximum displacement towards angle to prey (limited by min, max)
 
-                   // Step 1
-    double hunter_dist;
-    double prey_dist;
-    string closest_prey = getNameOfClosestPrey(prey_dist);
-    string closest_hunter = getNameOfClosestHunter(hunter_dist);
-
-    double angle;
-    double pi = 3.1415926535897;
-
-    if (prey_dist>=hunter_dist)
-    {
-      // Step 2
-      angle = getAngle(closest_hunter);
-    }
-    else if (hunter_dist<5)
-    {
-      angle = getAngle(closest_prey)+pi;
-    }
-
-    // Step 3
-    double displacement = msg.cat; // I am a cat, others may choose another
-                                   // animal
-
-    // Step 4
-    move(displacement, angle);
+                // Step 1
+			    double hunter_dist;
+			    double prey_dist;
+			    string closest_prey = getNameOfClosestPrey(prey_dist);
+			    string closest_hunter = getNameOfClosestHunter(hunter_dist);
+			
+			    double angle;
+			    double pi = 3.1415926535897;
+			
+			    if (prey_dist>=hunter_dist)
+			    {
+			      // Step 2
+			      angle = getAngle(closest_hunter);
+			    }
+			    else if (hunter_dist>2)
+			    {
+			      angle = getAngle(closest_prey)+pi;
+			    }
+			
+			    // Step 3
+			    double displacement = msg.cat; // I am a cat, others may choose another
+			                                   // animal
+			
+			    // Step 4
+			    move(displacement, angle);
 				
 				
             }
