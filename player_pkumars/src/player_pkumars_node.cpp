@@ -137,7 +137,7 @@ class Player
         catch (tf::TransformException& ex)
         {
             ROS_ERROR("%s",ex.what());
-            ros::Duration(1.0).sleep();
+            ros::Duration(0.1).sleep();
         }
 
 		tf::Transform t;
