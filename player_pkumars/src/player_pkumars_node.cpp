@@ -63,7 +63,7 @@ class Player
 		string first_refframe = p.name;
 		string second_refframe = name;
 
-		ros::Duration(0.001).sleep(); //To allow the listener to hear messages
+		ros::Duration(0.01).sleep(); //To allow the listener to hear messages
 		tf::StampedTransform st; //The pose of the player
 		try
 		{
@@ -94,7 +94,7 @@ class Player
 		string first_refframe = name;
 		string second_refframe = player_name;
 		
-		ros::Duration(0.001).sleep(); //To allow the listener to hear messages
+		ros::Duration(0.01).sleep(); //To allow the listener to hear messages
 		tf::StampedTransform st; //The pose of the player
 		try
 		{
