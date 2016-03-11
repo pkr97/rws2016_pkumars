@@ -422,7 +422,7 @@ class MyPlayer: public Player
                 if (hunter_dist<2 )
                 { 
 					displacement = -displacement;
-					angle = -getAngle(closest_hunter);
+					angle = getAngle(closest_hunter);
 					
 				
 				}
