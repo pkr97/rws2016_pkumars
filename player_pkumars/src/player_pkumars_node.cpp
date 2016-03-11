@@ -357,43 +357,41 @@ class MyPlayer: public Player
             }
             
             
-       string getNameOfClosestPrey(void)
-            {
-                double prey_dist = getDistance(*prey_team->players[0]);
-                string prey_name = prey_team->players[0]->name;
+      string getNameOfClosestPrey(double &prey_dist)
+  {
+    prey_dist = getDistance(*prey_team->players[0]);
+    string prey_name = prey_team->players[0]->name;
 
-                for (size_t i = 1; i < prey_team->players.size(); ++i)
-                {
-                    double d = getDistance(*prey_team->players[i]);
+    for (size_t i = 1; i < prey_team->players.size(); ++i)
+    {
+      double d = getDistance(*prey_team->players[i]);
 
-                    if (d < prey_dist) //A new minimum
-                    {
-                        prey_dist = d;
-                        prey_name = prey_team->players[i]->name;
-                    }
-                }
+      if (d < prey_dist) // A new minimum
+      {
+        prey_dist = d;
+        prey_name = prey_team->players[i]->name;
+      }
+    }
+    return prey_name;
+  }
 
-                return prey_name;
-            }
-            
-            string getNameOfClosestHunter(void)
-            {
-                double hunter_dist = getDistance(*hunter_team->players[0]);
-                string hunter_name = hunter_team->players[0]->name;
+  string getNameOfClosestHunter(double &hunter_dist)
+  {
+    hunter_dist = getDistance(*hunter_team->players[0]);
+    string hunter_name = hunter_team->players[0]->name;
 
-                for (size_t i = 1; i < prey_team->players.size(); ++i)
-                {
-                    double d = getDistance(*hunter_team->players[i]);
+    for (size_t i = 1; i < hunter_team->players.size(); ++i)
+    {
+      double d = getDistance(*hunter_team->players[i]);
 
-                    if (d < hunter_dist) //A new minimum
-                    {
-                        hunter_dist = d;
-                        hunter_name = hunter_team->players[i]->name;
-                    }
-                }
-
-                return hunter_name;
-            }
+      if (d < hunter_dist) // A new minimum
+      {
+        hunter_dist = d;
+        hunter_name = hunter_team->players[i]->name;
+      }
+    }
+    return hunter_name;
+  }
 
 		/**
              * @brief called whenever a /game_move msg is received
@@ -411,24 +409,31 @@ class MyPlayer: public Player
                 //3. Compute maximum displacement
                 //4. Move maximum displacement towards angle to prey (limited by min, max)
 
-                //Step 1
-                string closest_prey = getNameOfClosestPrey();
-                string closest_hunter = getNameOfClosestHunter();
-                
-                //ROS_INFO("Closest prey is %s", closest_prey.c_str());
-                //ROS_INFO("Closest prey is %s", closest_hunter.c_str());
+                   // Step 1
+    double hunter_dist;
+    double prey_dist;
+    string closest_prey = getNameOfClosestPrey(prey_dist);
+    string closest_hunter = getNameOfClosestHunter(hunter_dist);
 
-                //Step 2
-                double angle_prey = getAngle(closest_prey);
-                //double angle_hunter = getAngle(closest_hunter);
+    double angle;
+    double pi = 3.1415926535897;
 
-                //Step 3
-                double displacement = msg.cat; //I am a cat, others may choose another animal
-				//double distance_hunter = getHunterDistance(closest_hunter);
-				
-				
-			
-                move(displacement, angle_prey);
+    if (prey_dist>=hunter_dist)
+    {
+      // Step 2
+      angle = getAngle(closest_hunter);
+    }
+    else if (hunter_dist<5)
+    {
+      angle = getAngle(closest_prey)+pi;
+    }
+
+    // Step 3
+    double displacement = msg.dog; // I am a cat, others may choose another
+                                   // animal
+
+    // Step 4
+    move(displacement, angle);
 				
 				
             }
