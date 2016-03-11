@@ -391,7 +391,7 @@ int main(int argc, char **argv)
 {
 
 	//initialize ROS stuff
-    ros::init(argc, argv, "player_pkumars_node");
+    ros::init(argc, argv, "pkumars");
     ros::NodeHandle node;
 
     //Creating an instance of class MyPlayer
