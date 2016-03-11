@@ -72,7 +72,7 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(0.01).sleep();
+			ros::Duration(0.1).sleep();
 			return 999;
 		}
 
@@ -103,7 +103,7 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(0.01).sleep();
+			ros::Duration(0.1).sleep();
 			return 0;
 		}
 		
@@ -128,7 +128,7 @@ class Player
 	
 	tf::Transform getPose(void)
 	{
-		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+		ros::Duration(0.01).sleep(); //To allow the listener to hear messages
         tf::StampedTransform st; //The pose of the player
         try
         {
