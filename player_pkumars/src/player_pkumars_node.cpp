@@ -88,6 +88,37 @@ class Player
 
 	}
 	
+	double getHunterDistance(string hunter)
+	{
+		//computing the distance 
+		string first_refframe = hunter;
+		string second_refframe = name;
+
+		ros::Duration(0.01).sleep(); //To allow the listener to hear messages
+		tf::StampedTransform st; //The pose of the player
+		try
+		{
+			listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
+		}
+		catch (tf::TransformException& ex)
+		{
+			ROS_ERROR("%s",ex.what());
+			ros::Duration(0.1).sleep();
+			return 999;
+		}
+
+		tf::Transform t;
+		t.setOrigin(st.getOrigin());
+		t.setRotation(st.getRotation());
+
+		double x = t.getOrigin().x();
+		double y = t.getOrigin().y();
+
+		double norm = sqrt(x*x + y*y);
+		return norm;
+
+	}
+	
 	double getAngle(string player_name)
 	{
 		//computing the distance 
@@ -270,7 +301,7 @@ class MyPlayer: public Player
 			prey_team->printTeamInfo();
 			
 			//Initialize position according to team
-			ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
+			ros::Duration(0.2).sleep(); //sleep to make sure the time is correct
 			tf::Transform t;
 			
 			struct timeval t1;      
@@ -344,6 +375,25 @@ class MyPlayer: public Player
 
                 return prey_name;
             }
+            
+            string getNameOfClosestHunter(void)
+            {
+                double hunter_dist = getDistance(*hunter_team->players[0]);
+                string hunter_name = hunter_team->players[0]->name;
+
+                for (size_t i = 1; i < prey_team->players.size(); ++i)
+                {
+                    double d = getDistance(*hunter_team->players[i]);
+
+                    if (d < hunter_dist) //A new minimum
+                    {
+                        hunter_dist = d;
+                        hunter_name = hunter_team->players[i]->name;
+                    }
+                }
+
+                return hunter_name;
+            }
 
 		/**
              * @brief called whenever a /game_move msg is received
@@ -363,17 +413,42 @@ class MyPlayer: public Player
 
                 //Step 1
                 string closest_prey = getNameOfClosestPrey();
+                string closest_hunter = getNameOfClosestHunter();
+                
                 ROS_INFO("Closest prey is %s", closest_prey.c_str());
+                ROS_INFO("Closest prey is %s", closest_hunter.c_str());
 
                 //Step 2
-                double angle = getAngle(closest_prey);
+                double angle_prey = getAngle(closest_prey);
+                double angle_hunter = getAngle(closest_prey);
 
                 //Step 3
                 double displacement = msg.cat; //I am a cat, others may choose another animal
-
-                //Step 4
-                move(displacement, angle);
-
+				double distance_hunter = getHunterDistance(closest_hunter);
+				/**
+				//Step 4
+				if (distance_hunter>2 && angle_hunter>0)
+				{
+					move(displacement, -angle_prey);
+				}
+				else if (distance_hunter>2 && angle_hunter<0)
+				{
+					move(displacement, angle_prey);
+				}
+				else if (distance_hunter<2 && angle_hunter>0)
+				{
+					move(2*displacement, -angle_prey);
+				}
+				else if (distance_hunter<2 && angle_hunter<0)
+				{
+					move(2*displacement, angle_prey);
+				}
+				*/
+				
+					move(displacement, angle_prey);
+				
+				//move(displacement, angle_prey);
+				
             }
 
 };
