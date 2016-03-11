@@ -417,25 +417,18 @@ class MyPlayer: public Player
 			
 			    double angle;
 			    double pi = 3.1415926535897;
-			    
+			    double displacement = msg.cat;
 			
-			    if (prey_dist>=hunter_dist)
-			    {
-			      // Step 2
-			      angle = getAngle(closest_hunter);
-			    }
-			    else if (hunter_dist<4)
-			    {
-			      angle = getAngle(closest_prey)+pi;
-			    }
-			
-			    // Step 3
-			     // I am a cat, others may choose another
-			     double displacement = msg.cat;     // animal
-			
-			    // Step 4
-			    move(displacement, angle);
+                if (hunter_dist<2 )
+                { 
+					move(-displacement, -getAngle(closest_hunter));
 				
+				}
+                else
+                {
+					move(displacement, getAngle(closest_prey));
+				}
+			   
 				
             }
 
