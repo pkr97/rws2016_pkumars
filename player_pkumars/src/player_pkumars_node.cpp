@@ -8,6 +8,9 @@
 #include "std_msgs/String.h"
 #include <sstream>
 
+#include <rws2016_libs/team_info.h>
+#include <rws2016_msgs/GameMove.h>
+
 
 using namespace std;
 
@@ -47,13 +50,13 @@ class Player
 	
 	//A public atribute
 	string name; // existing or declared name
-	
+	/**
 	void getDistanceToAllHunters(void)
 	{
 		//for hunter in hunters 
 
 	}
-	
+	*/
 	double getDistance(Player& p)
 	{
 		//computing the distance 
@@ -62,10 +65,12 @@ class Player
 
 		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
 		tf::StampedTransform st; //The pose of the player
-		try{
+		try
+		{
 			listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
 		}
-		catch (tf::TransformException& ex){
+		catch (tf::TransformException& ex)
+		{
 			ROS_ERROR("%s",ex.what());
 			ros::Duration(1.0).sleep();
 		}
@@ -82,6 +87,36 @@ class Player
 
 	}
 	
+	double getAngle(string player_name)
+	{
+		//computing the distance 
+		string first_refframe = name;
+		string second_refframe = player_name;
+		
+		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+		tf::StampedTransform st; //The pose of the player
+		try
+		{
+			listener.lookupTransform(first_refframe, second_refframe, ros::Time(0), st);
+		}
+		catch (tf::TransformException& ex)
+		{
+			ROS_ERROR("%s",ex.what());
+			ros::Duration(1.0).sleep();
+		}
+		
+		tf::Transform t;
+		t.setOrigin(st.getOrigin());
+		t.setRotation(st.getRotation());
+		
+		double x = t.getOrigin().x();
+		double y = t.getOrigin().y();
+		
+		double angle = atan2(y,x);
+		return angle;
+	
+	}
+	
 	
 	//Gets team name and returns it(accessor) (because this team variable is private and cannot be used outside this class.)
 	string getTeamName(void)
@@ -92,25 +127,20 @@ class Player
 	tf::Transform getPose(void)
 	{
 		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
-		tf::StampedTransform st; //The pose of the player
-		static tf::TransformBroadcaster br;
-		
-		try
-		{
-			listener.lookupTransform("/map", name, ros::Time(0), st);
-		}
-		catch (tf::TransformException ex)
-		{
-			ROS_ERROR("%s",ex.what());
-			ros::Duration(1.0).sleep();
-		}
+        tf::StampedTransform st; //The pose of the player
+        try
+        {
+           listener.lookupTransform("/map", name, ros::Time(0), st);
+        }
+        catch (tf::TransformException& ex)
+        {
+            ROS_ERROR("%s",ex.what());
+            ros::Duration(1.0).sleep();
+        }
 
 		tf::Transform t;
-		
 		t.setOrigin(st.getOrigin());
 		t.setRotation(st.getRotation());
-		
-		
 		return t;
 	}
 	
@@ -162,10 +192,10 @@ class Team
 
     void printTeamInfo(void)
     {
-        cout << "Team " << name << " has the following players:" << endl;
+		cout << "Team " << name << " has the following players:" << endl;
 
-        for (size_t i=0; i < players.size(); ++i)
-            cout << players[i]->name << endl;
+		for (size_t i=0; i < players.size(); ++i)
+			cout << players[i]->name << endl;
     }
 
     /**
@@ -201,8 +231,15 @@ class MyPlayer: public Player
 		//rws2016_moliveira::Team prey_team("green", prey_names);
 		//prey_team.printTeamInfo();
 
+		/**
+		* @brief The teams
+		*/
+		boost::shared_ptr<Team> my_team;
+		boost::shared_ptr<Team> hunter_team;
 		boost::shared_ptr<Team> prey_team;
-
+		
+		boost::shared_ptr<ros::Subscriber> _sub;
+	
 		/**
 		 * @brief Constructor
 		 *
@@ -210,21 +247,41 @@ class MyPlayer: public Player
 		 * @param team team name
 		 */
 	
-    MyPlayer(string name, string team): Player(name) // coming name assigned here 
-    {
-        setTeamName(team);
-
-		//Initialize position to 0,0,0
-		tf::Transform t;
-		t.setOrigin( tf::Vector3(0.0, 0.0, 0.0) );
-		tf::Quaternion q; q.setRPY(0, 0, 0);
-		t.setRotation(q);
-		br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
-    
-		vector<string> prey_names;
-		prey_names.push_back("lalmeida");
-		prey_team = (boost::shared_ptr<Team>) new Team("green", prey_names);
-    }
+	    MyPlayer(string name, string team): Player(name) // coming name assigned here 
+	    {
+			setTeamName(team);
+			ros::NodeHandle node;
+			
+			//Initialize teams
+			vector<string> myTeam_names, myHunters_names, myPreys_names;
+			string myTeamId, myHuntersId, myPreysId;
+			
+			if (!team_info(node, myTeam_names, myHunters_names, myPreys_names, myTeamId, myHuntersId, myPreysId))
+			ROS_ERROR("Something went wrong reading teams");
+			
+			my_team = (boost::shared_ptr<Team>) new Team(myTeamId, myTeam_names);
+			hunter_team = (boost::shared_ptr<Team>) new Team(myHuntersId, myHunters_names);
+			prey_team = (boost::shared_ptr<Team>) new Team(myPreysId, myPreys_names);
+			
+			my_team->printTeamInfo();
+			hunter_team->printTeamInfo();
+			prey_team->printTeamInfo();
+			
+			//Initialize position according to team
+			ros::Duration(0.5).sleep(); //sleep to make sure the time is correct
+			tf::Transform t;
+			srand((unsigned)time(NULL)); // To start the player in a random location
+			double X=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+			double Y=((((double)rand()/(double)RAND_MAX) ) * 2 -1) * 5 ;
+			t.setOrigin( tf::Vector3(X, Y, 0.0) );
+			tf::Quaternion q; q.setRPY(0, 0, 0);
+			t.setRotation(q);
+			br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
+			
+			//initialize the subscriber
+			_sub = (boost::shared_ptr<ros::Subscriber>) new ros::Subscriber;
+			*_sub = node.subscribe("/game_move", 1, &MyPlayer::moveCallback, this);  
+		}
     
     /**
 	 * @brief Moves MyPlayer
@@ -236,12 +293,12 @@ class MyPlayer: public Player
             {
                 //Put arguments withing authorized boundaries
                 double max_d =  1; 
-                displacement = (displacement > max_d ? max_d : displacement); // turnary operator.
+                displacement = (displacement > max_d ? max_d : displacement);
 
                 double min_d =  -0.1; 
                 displacement = (displacement < min_d ? min_d : displacement);
 
-                double max_t =  (M_PI/60);
+                double max_t =  (M_PI/30);
                 if (turn_angle > max_t)
                     turn_angle = max_t;
                 else if (turn_angle < -max_t)
@@ -254,16 +311,66 @@ class MyPlayer: public Player
                 q.setRPY(0, 0, turn_angle);
                 t_mov.setRotation(q);
 
-/**
- *  we are not publishing map.
- *  we are publishing only transformations 
- * */
                 tf::Transform t = getPose();
                 t = t  * t_mov;
 
                 //Send the new transform to ROS
                 br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "/map", name));
             }
+            
+            
+       string getNameOfClosestPrey(void)
+            {
+                double prey_dist = getDistance(*prey_team->players[0]);
+                string prey_name = prey_team->players[0]->name;
+
+                for (size_t i = 1; i < prey_team->players.size(); ++i)
+                {
+                    double d = getDistance(*prey_team->players[i]);
+
+                    if (d < prey_dist) //A new minimum
+                    {
+                        prey_dist = d;
+                        prey_name = prey_team->players[i]->name;
+                    }
+                }
+
+                return prey_name;
+            }
+
+		/**
+             * @brief called whenever a /game_move msg is received
+             *
+             * @param msg the msg with the animal values
+             */
+            void moveCallback(const rws2016_msgs::GameMove& msg)
+            {
+                ROS_INFO("player %s received game_move msg", name.c_str()); 
+
+                //I will encode a very simple hunting behaviour:
+                //
+                //1. Get closest prey name
+                //2. Get angle to closest prey
+                //3. Compute maximum displacement
+                //4. Move maximum displacement towards angle to prey (limited by min, max)
+
+                //Step 1
+                string closest_prey = getNameOfClosestPrey();
+                ROS_INFO("Closest prey is %s", closest_prey.c_str());
+
+                //Step 2
+                double angle = getAngle(closest_prey);
+
+                //Step 3
+                double displacement = msg.cat; //I am a cat, others may choose another animal
+
+                //Step 4
+                move(displacement, angle);
+
+            }
+
+
+
 };
 
 
@@ -289,41 +396,9 @@ int main(int argc, char **argv)
 
     //Creating an instance of class MyPlayer
     rws2016_pkumars::MyPlayer my_player("pkumars", "green");
+	
+	//Infinite loop
+    ros::spin();
     
-    //vector<string> myteam_names;
-    //myteam_names.push_back("moliveira");
-    //rws2016_moliveira::Team my_team("red", myteam_names);
-    //my_team.printTeamInfo();
-
-    //vector<string> prey_names;
-    //prey_names.push_back("lalmeida");
-    //rws2016_moliveira::Team prey_team("green", prey_names);
-    //prey_team.printTeamInfo();
-    
-    rws2016_pkumars::Player lalmeida_player("lalmeida");
-    
-    
-    
-
-    //Infinite loop
-    ros::Rate loop_rate(10);
-    while (ros::ok())
-    {
-        //Test the get pose method                                                                                     
-        tf::Transform t = my_player.getPose();
-        cout << "x = " << t.getOrigin().x() << " y = " << t.getOrigin().y() << endl;
-        
-        double dist_from_my_player_to_lalmeida = my_player.getDistance(lalmeida_player);
-        cout << "dist_from_my_player_to_lalmeida = " << dist_from_my_player_to_lalmeida << endl;
-        
-        //Test the move method
-        my_player.move(0.1, -M_PI/6);
-        
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
-
-
-return 1;
 }
 

@@ -9,6 +9,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   tf
+  rws2016_libs
+  rws2016_msgs
+
 )
 
 ## System dependencies are found with CMake's conventions
