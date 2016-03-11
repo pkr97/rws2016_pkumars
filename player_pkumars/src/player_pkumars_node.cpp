@@ -72,7 +72,7 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(0.1).sleep();
+			ros::Duration(0.01).sleep();
 			return 999;
 		}
 
@@ -103,7 +103,7 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(0.1).sleep();
+			ros::Duration(0.01).sleep();
 			return 0;
 		}
 		
