@@ -409,7 +409,7 @@ class MyPlayer: public Player
                 //3. Compute maximum displacement
                 //4. Move maximum displacement towards angle to prey (limited by min, max)
 
-                // Step 1
+                
 			    double hunter_dist;
 			    double prey_dist;
 			    string closest_prey = getNameOfClosestPrey(prey_dist);
@@ -421,15 +421,17 @@ class MyPlayer: public Player
 			
                 if (hunter_dist<2 )
                 { 
-					move(-displacement, -getAngle(closest_hunter));
+					displacement = -displacement;
+					angle = -getAngle(closest_hunter);
+					
 				
 				}
                 else
                 {
-					move(displacement, getAngle(closest_prey));
+					angle = getAngle(closest_prey);
 				}
 			   
-				
+				move(displacement, angle);
             }
 
 };
