@@ -424,7 +424,7 @@ class MyPlayer: public Player
 			      // Step 2
 			      angle = getAngle(closest_hunter);
 			    }
-			    else if (hunter_dist>3)
+			    else if (hunter_dist<4)
 			    {
 			      angle = getAngle(closest_prey)+pi;
 			    }
