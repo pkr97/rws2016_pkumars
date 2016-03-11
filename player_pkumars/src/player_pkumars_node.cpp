@@ -24,7 +24,7 @@ class Player
 	//Constructor with the same name as the class
 	Player (string name_coming){this ->name=name_coming;} // this existing name is equal to the coming variable name from main function
 	
-	int setTeamName(int team_index = 0 /*default value*/)
+	int setTeamName(int team_index = 1 /*default value*/)
 	{
 		if (team_index==0){setTeamName("red"); return 1;}
 		else if (team_index==1){setTeamName("green"); return 1;}
