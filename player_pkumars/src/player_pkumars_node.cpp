@@ -413,21 +413,41 @@ class MyPlayer: public Player
 
                 //Step 1
                 string closest_prey = getNameOfClosestPrey();
-                //string closest_hunter = getNameOfClosestHunter();
+                string closest_hunter = getNameOfClosestHunter();
                 
                 //ROS_INFO("Closest prey is %s", closest_prey.c_str());
                 //ROS_INFO("Closest prey is %s", closest_hunter.c_str());
 
                 //Step 2
                 double angle_prey = getAngle(closest_prey);
-                //double angle_hunter = getAngle(closest_prey);
+                double angle_hunter = getAngle(closest_prey);
 
                 //Step 3
                 double displacement = msg.cat; //I am a cat, others may choose another animal
-				//double distance_hunter = getHunterDistance(closest_hunter);
+				double distance_hunter = getHunterDistance(closest_hunter);
 				
 				
 				move(displacement, angle_prey);
+				
+				double angle;
+                //double displacement;
+
+                if (distance_hunter < 2.0 && distance_hunter > 1.5)
+                {
+                    angle = angle_prey + M_PI/2;
+                    displacement = -0.1;
+                }
+
+                if (distance_hunter < 1.5)
+                {
+                    angle = angle_prey + M_PI/2;
+                    displacement = msg.cat;
+                }
+                else if (distance_hunter>2)
+                {
+                     angle = angle_prey;
+                     displacement = msg.cat;
+                }
 				
 				
             }
