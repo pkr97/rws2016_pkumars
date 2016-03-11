@@ -63,7 +63,7 @@ class Player
 		string first_refframe = p.name;
 		string second_refframe = name;
 
-		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+		ros::Duration(0.001).sleep(); //To allow the listener to hear messages
 		tf::StampedTransform st; //The pose of the player
 		try
 		{
@@ -72,7 +72,8 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(1.0).sleep();
+			ros::Duration(0.1).sleep();
+			return 999;
 		}
 
 		tf::Transform t;
@@ -93,7 +94,7 @@ class Player
 		string first_refframe = name;
 		string second_refframe = player_name;
 		
-		ros::Duration(0.1).sleep(); //To allow the listener to hear messages
+		ros::Duration(0.001).sleep(); //To allow the listener to hear messages
 		tf::StampedTransform st; //The pose of the player
 		try
 		{
@@ -102,7 +103,8 @@ class Player
 		catch (tf::TransformException& ex)
 		{
 			ROS_ERROR("%s",ex.what());
-			ros::Duration(1.0).sleep();
+			ros::Duration(0.1).sleep();
+			return 0;
 		}
 		
 		tf::Transform t;
@@ -362,7 +364,7 @@ class MyPlayer: public Player
                 double angle = getAngle(closest_prey);
 
                 //Step 3
-                double displacement = msg.dog; //I am a cat, others may choose another animal
+                double displacement = msg.cat; //I am a cat, others may choose another animal
 
                 //Step 4
                 move(displacement, angle);
