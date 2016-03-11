@@ -417,7 +417,7 @@ class MyPlayer: public Player
 			
 			    double angle;
 			    double pi = 3.1415926535897;
-			    double displacement = msg.cat;
+			    
 			
 			    if (prey_dist>=hunter_dist)
 			    {
@@ -431,7 +431,7 @@ class MyPlayer: public Player
 			
 			    // Step 3
 			     // I am a cat, others may choose another
-			                                   // animal
+			     double displacement = msg.cat;     // animal
 			
 			    // Step 4
 			    move(displacement, angle);
