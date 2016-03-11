@@ -298,7 +298,7 @@ class MyPlayer: public Player
                 double min_d =  -0.1; 
                 displacement = (displacement < min_d ? min_d : displacement);
 
-                double max_t =  (M_PI/20);
+                double max_t =  (M_PI/30);
                 if (turn_angle > max_t)
                     turn_angle = max_t;
                 else if (turn_angle < -max_t)
@@ -362,7 +362,7 @@ class MyPlayer: public Player
                 double angle = getAngle(closest_prey);
 
                 //Step 3
-                double displacement = msg.cat; //I am a cat, others may choose another animal
+                double displacement = msg.dog; //I am a cat, others may choose another animal
 
                 //Step 4
                 move(displacement, angle);
