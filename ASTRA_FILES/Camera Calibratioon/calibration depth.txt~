@@ -1,0 +1,6 @@
+http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
+
+
+1. $ roslaunch astra_launch astrapro.launch
+
+2. rosrun camera_calibration cameracalibrator.py image:=/camera/ir/image_raw camera:=/camera/ir --size 8x6 --square 0.0275

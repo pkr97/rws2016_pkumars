@@ -1,0 +1,50 @@
+http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
+
+
+1. $ roslaunch astra_launch astrapro.launch
+
+2. $ rosrun camera_calibration cameracalibrator.py image:=/camera/rgb/image_raw camera:=/camera/rgb --size 8x6 --square 0.0275
+
+if it shows ('Waiting for service', '/camera/rgb/set_camera_info', '...') run the following line
+3. $ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.0275 --no-service-check image:=/camera/rgb/image_raw camera:=/camera/rgb
+
+rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.0275 --no-service-check image:=/camera/rgb/image_raw camera:=/camera/rgb
+
+Optional. If it does not open up the window try the following parameter:
+
+
+ --no-service-check
+
+
+----- Calibrate
+----- Save
+----- .yaml file
+
+
+--- 
+header: 
+  seq: 44 
+  stamp: 
+    secs: 1493810762 
+    nsecs: 374881266 
+  frame_id: camera_rgb_optical_frame 
+height: 480 
+width: 640 
+distortion_model: plumb_bob 
+D: [0.1924862242666659, -0.1428745350678355, -0.008005953314755045,
+-0.01514558091529794, 0.0] 
+K: [631.9627446307516, 0.0, 292.3340769022051, 0.0, 626.7628503190605,
+231.5643918983762, 0.0, 0.0, 1.0] 
+R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0] 
+P: [663.3839721679688, 0.0, 285.5615141729359, 0.0, 0.0, 662.3782348632812,
+228.5056059693034, 0.0, 0.0, 0.0, 1.0, 0.0] 
+binning_x: 0 
+binning_y: 0 
+roi: 
+  x_offset: 0 
+  y_offset: 0 
+  height: 0 
+  width: 0 
+  do_rectify: False 
+---
+

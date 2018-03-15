@@ -1,0 +1,11 @@
+sudo umount /home/pkumars/.gvfs
+sudo rm -rf .gvfs/
+
+
+
+I have encountered the same problem. You can solve by change the ownership of ~/.ros directory from root to your current account with the following command: 
+
+cd 
+sudo chown -R accountName .ros 
+
+

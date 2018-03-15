@@ -1,0 +1,1 @@
+http://wiki.ros.org/openni_launch/Tutorials/QuickStart#Registration:_matching_depth_to_color

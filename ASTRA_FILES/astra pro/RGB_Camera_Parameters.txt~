@@ -1,0 +1,28 @@
+roslaunch astra_launch astra_pro.launch
+
+rostopic echo /camera/rgb/camera_info
+
+---
+header: 
+  seq: 137
+  stamp: 
+    secs: 1520918729
+    nsecs: 681809825
+  frame_id: camera_rgb_optical_frame
+height: 0
+width: 0
+distortion_model: ''
+D: []
+K: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+R: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+P: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+binning_x: 0
+binning_y: 0
+roi: 
+  x_offset: 0
+  y_offset: 0
+  height: 0
+  width: 0
+  do_rectify: False
+---
+

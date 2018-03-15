@@ -1,0 +1,23 @@
+http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
+
+
+1. $ roslaunch astra_launch astrapro.launch
+
+2. $ rosrun camera_calibration cameracalibrator.py image:=/camera/rgb/image_raw camera:=/camera/rgb --size 8x6 --square 0.0275
+
+if it shows ('Waiting for service', '/camera/rgb/set_camera_info', '...') run the following line
+3. $ rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.0275 --no-service-check image:=/camera/rgb/image_raw camera:=/camera/rgb
+
+rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.0275 --no-service-check image:=/camera/rgb/image_raw camera:=/camera/rgb
+
+Optional. If it does not open up the window try the following parameter:
+
+
+ --no-service-check
+
+
+----- Calibrate
+----- Save
+----- .yaml file
+
+

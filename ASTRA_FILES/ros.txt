@@ -1,0 +1,6 @@
+$ cd ~/catkin_ws/
+$ catkin_make
+$ source devel/setup.bash
+$ echo $ROS_PACKAGE_PATH
+
+catkin_make --force-cmake
