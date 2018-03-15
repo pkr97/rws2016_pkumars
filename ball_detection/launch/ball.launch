@@ -1,0 +1,24 @@
+<launch>
+
+  <node name="openni_tracker"
+        pkg="openni_tracker"
+        type="openni_tracker"
+ 	output="screen">
+	respawn="true"
+  </node>
+  
+  <node name="skelCord"
+        pkg="ball_detection"
+        type="skelCord"
+ 	output="screen">
+	respawn="true"
+  </node>
+  
+  <node name="ball_R1"
+        pkg="ball_detection"
+        type="ball_R1"
+ 	output="screen">
+	respawn="true"
+  </node>  
+
+</launch>

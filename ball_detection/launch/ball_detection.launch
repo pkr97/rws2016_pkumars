@@ -1,0 +1,28 @@
+<?xml version='1.0'?>
+
+<launch>
+
+  <include file="$(find openni_launch)/launch/openni.launch"/>
+
+  <node name="ball_cord"
+        pkg="ball_detection"
+        type="ball_cord"
+ 	output="screen">
+	respawn="true"
+  </node>
+  
+  <node name="ball_estimate"
+        pkg="ball_detection"
+        type="ball_estimate"
+ 	output="screen">
+	respawn="true"
+  </node>
+  
+  <node name="ballCord_transform"
+        pkg="ball_detection"
+        type="ballCord_transform"
+ 	output="screen">
+	respawn="true"
+  </node>  
+
+</launch>
